@@ -279,7 +279,7 @@ function ForecastContent() {
                 </div>
 
                 <div className={styles.clickHint}>
-                  Click para ver detalles →
+                  Ver detalle por hora
                 </div>
               </div>
             ))}

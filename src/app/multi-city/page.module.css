@@ -377,6 +377,20 @@
   font-weight: 500;
 }
 
+.clickHint {
+  font-size: 0.75rem;
+  color: #4a5568;
+  text-align: center;
+  padding-top: 0.5rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.forecastCard:hover .clickHint {
+  opacity: 1;
+  color: #00f5d4;
+}
+
 /* Placeholder */
 .placeholder {
   display: flex;

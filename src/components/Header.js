@@ -133,13 +133,6 @@ export default function Header() {
       description: "Consulta el clima de los próximos días",
       link: "/multi-city",
       color: "green"
-    },
-    {
-      icon: "🔍",
-      title: "Búsqueda Rápida",
-      description: "Usa el buscador del header",
-      link: "/#explore",
-      color: "purple"
     }
   ];
 
