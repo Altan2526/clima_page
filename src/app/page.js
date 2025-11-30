@@ -1,28 +1,27 @@
 import Link from "next/link";
 import styles from "./page.module.css";
-import CountryCitySelector from "@/components/CountryCitySelector";
 
 export default function Home() {
   const features = [
     {
       icon: "🗺️",
       title: "Explorar por País",
-      description: "Selecciona un país y ciudad de nuestra lista para ver el clima rápidamente.",
+      description: "Selecciona un país y ciudad de nuestra lista para ver el clima actual y pronóstico de 5 días.",
       link: "/explorar",
       color: "purple"
     },
     {
       icon: "📅",
       title: "Pronóstico 5 Días",
-      description: "Consulta el pronóstico del tiempo para los próximos 5 días de cualquier ciudad.",
+      description: "Busca cualquier ciudad y consulta el pronóstico detallado para los próximos 5 días.",
       link: "/multi-city",
       color: "green"
     },
     {
-      icon: "🔍",
-      title: "Búsqueda Rápida",
-      description: "Usa el buscador del header para encontrar cualquier ciudad del mundo.",
-      link: "#explore",
+      icon: "⏱️",
+      title: "Pronóstico por Hora",
+      description: "Visualiza el clima hora por hora para planificar tu día con precisión.",
+      link: "/multi-city",
       color: "cyan"
     },
   ];
@@ -37,7 +36,7 @@ export default function Home() {
           </h1>
           <p className={styles.heroSubtitle}>
             Tu aplicación de clima favorita para consultar el tiempo en cualquier parte del mundo. 
-            Información actualizada en tiempo real gracias a la API de OpenWeather.
+            Busca ciudades con autocompletado inteligente y obtén pronósticos detallados.
           </p>
           <div className={styles.heroCTA}>
             <Link href="/explorar" className={styles.primaryButton}>
@@ -68,28 +67,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Country/City Explorer Section */}
-      <section id="explore" className={styles.exploreSection}>
-        <h2 className={styles.sectionTitle}>Explorar por País y Ciudad</h2>
-        <p className={styles.exploreDescription}>
-          Selecciona un país de la lista y luego elige una de sus principales ciudades para consultar el clima
-        </p>
-        <CountryCitySelector />
+      {/* How to use Section */}
+      <section className={styles.howItWorks}>
+        <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
+        <div className={styles.steps}>
+          <div className={styles.step}>
+            <span className={styles.stepNumber}>1</span>
+            <h3>Busca tu ciudad</h3>
+            <p>Usa el buscador del header con autocompletado inteligente</p>
+          </div>
+          <div className={styles.step}>
+            <span className={styles.stepNumber}>2</span>
+            <h3>Consulta el pronóstico</h3>
+            <p>Visualiza el clima actual y pronóstico de 5 días</p>
+          </div>
+          <div className={styles.step}>
+            <span className={styles.stepNumber}>3</span>
+            <h3>Explora los detalles</h3>
+            <p>Haz clic en cualquier día para ver el pronóstico por hora</p>
+          </div>
+        </div>
       </section>
 
-      {/* Info Section */}
+      {/* Stats Section */}
       <section className={styles.info}>
-        <h2 className={styles.sectionTitle}>Información de la API</h2>
+        <h2 className={styles.sectionTitle}>Características</h2>
         <div className={styles.infoCards}>
           <div className={styles.infoCard}>
-            <span className={styles.infoIcon}>⚡</span>
-            <h3>60 llamadas/min</h3>
-            <p>Límite de solicitudes por minuto en el plan gratuito</p>
-          </div>
-          <div className={styles.infoCard}>
-            <span className={styles.infoIcon}>📊</span>
-            <h3>1,000,000/mes</h3>
-            <p>Llamadas disponibles mensualmente sin costo</p>
+            <span className={styles.infoIcon}>🔍</span>
+            <h3>Autocompletado</h3>
+            <p>Búsqueda inteligente tolerante a tildes</p>
           </div>
           <div className={styles.infoCard}>
             <span className={styles.infoIcon}>🌡️</span>
@@ -97,31 +104,14 @@ export default function Home() {
             <p>Temperatura, humedad, viento y más</p>
           </div>
           <div className={styles.infoCard}>
+            <span className={styles.infoIcon}>📅</span>
+            <h3>Pronóstico 5 días</h3>
+            <p>Planifica tu semana con anticipación</p>
+          </div>
+          <div className={styles.infoCard}>
             <span className={styles.infoIcon}>🌐</span>
             <h3>Cobertura global</h3>
-            <p>Datos de ciudades de todo el mundo</p>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className={styles.howItWorks}>
-        <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
-        <div className={styles.steps}>
-          <div className={styles.step}>
-            <span className={styles.stepNumber}>1</span>
-            <h3>Elige una opción</h3>
-            <p>Busca una ciudad individual o compara múltiples ciudades</p>
-          </div>
-          <div className={styles.step}>
-            <span className={styles.stepNumber}>2</span>
-            <h3>Ingresa la ciudad</h3>
-            <p>Escribe el nombre de la ciudad que deseas consultar</p>
-          </div>
-          <div className={styles.step}>
-            <span className={styles.stepNumber}>3</span>
-            <h3>Obtén resultados</h3>
-            <p>Visualiza información detallada del clima actual</p>
+            <p>Ciudades de todo el mundo</p>
           </div>
         </div>
       </section>

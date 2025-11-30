@@ -44,9 +44,16 @@ export async function GET(request) {
     // La API devuelve datos cada 3 horas, necesitamos agrupar por día
     const dailyForecasts = {};
     
+    // Obtener la fecha de hoy en formato YYYY-MM-DD (zona local)
+    const today = new Date();
+    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
     data.list.forEach((item) => {
       const date = new Date(item.dt * 1000);
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      
+      // Solo incluir días desde hoy en adelante
+      if (dateKey < todayString) return;
       
       if (!dailyForecasts[dateKey]) {
         dailyForecasts[dateKey] = {
@@ -95,7 +102,7 @@ export async function GET(request) {
 
         return {
           date: day.date,
-          dayName: getDayName(new Date(day.date)),
+          dayName: getDayName(day.date),
           temperature: avgTemp,
           tempMax: maxTemp,
           tempMin: minTemp,
@@ -122,15 +129,24 @@ export async function GET(request) {
   }
 }
 
-function getDayName(date) {
+function getDayName(dateString) {
+  // Parsear la fecha correctamente para evitar desfase de zona horaria
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  
   const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   
-  if (date.toDateString() === today.toDateString()) {
+  const dateOnly = new Date(year, month - 1, day);
+  dateOnly.setHours(0, 0, 0, 0);
+  
+  if (dateOnly.getTime() === today.getTime()) {
     return 'Hoy';
-  } else if (date.toDateString() === tomorrow.toDateString()) {
+  } else if (dateOnly.getTime() === tomorrow.getTime()) {
     return 'Mañana';
   }
   

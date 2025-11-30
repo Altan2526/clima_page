@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
@@ -12,6 +12,13 @@ function ForecastContent() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  
+  // Estados para autocompletado
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const debounceTimer = useRef(null);
+  const inputRef = useRef(null);
 
   // Cargar ciudad desde URL solo al inicio
   useEffect(() => {
@@ -25,8 +32,65 @@ function ForecastContent() {
     }
   }, []);
 
+  // Cerrar sugerencias al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Buscar sugerencias con debounce
+  const searchSuggestions = async (query) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setIsLoadingSuggestions(true);
+    try {
+      const response = await fetch(`/api/cities/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      if (response.ok && data.cities) {
+        setSuggestions(data.cities.slice(0, 8));
+        setShowSuggestions(true);
+      }
+    } catch (err) {
+      console.error("Error buscando ciudades:", err);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setCityInput(value);
+    
+    // Limpiar timer anterior
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    
+    // Establecer nuevo timer con 400ms de delay
+    debounceTimer.current = setTimeout(() => {
+      searchSuggestions(value);
+    }, 400);
+  };
+
+  const handleSuggestionClick = (city) => {
+    setCityInput(city.name);
+    setShowSuggestions(false);
+    setSuggestions([]);
+    fetchForecast(`${city.name},${city.country}`);
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      setShowSuggestions(false);
       fetchForecast(cityInput);
     }
   };
@@ -108,17 +172,18 @@ function ForecastContent() {
       </div>
 
       <div className={styles.inputSection}>
-        <div className={styles.inputWrapper}>
+        <div className={styles.inputWrapper} ref={inputRef}>
           <input
             type="text"
             value={cityInput}
-            onChange={(e) => setCityInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyPress={handleKeyPress}
+            onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
             placeholder="Escribe el nombre de una ciudad..."
             className={styles.input}
           />
           <button 
-            onClick={() => fetchForecast(cityInput)} 
+            onClick={() => { setShowSuggestions(false); fetchForecast(cityInput); }}
             className={styles.searchButton}
             disabled={isLoading || !cityInput.trim()}
           >
@@ -128,6 +193,33 @@ function ForecastContent() {
               "🔍 Buscar"
             )}
           </button>
+          
+          {/* Lista de sugerencias */}
+          {showSuggestions && (
+            <div className={styles.suggestionsDropdown}>
+              {isLoadingSuggestions ? (
+                <div className={styles.suggestionLoading}>
+                  <span className={styles.miniLoader}></span>
+                  Buscando ciudades...
+                </div>
+              ) : suggestions.length > 0 ? (
+                suggestions.map((city, index) => (
+                  <div 
+                    key={`${city.name}-${city.country}-${index}`}
+                    className={styles.suggestionItem}
+                    onClick={() => handleSuggestionClick(city)}
+                  >
+                    <span className={styles.suggestionCity}>{city.name}</span>
+                    <span className={styles.suggestionCountry}>{city.countryName}</span>
+                  </div>
+                ))
+              ) : cityInput.length >= 2 ? (
+                <div className={styles.noSuggestions}>
+                  No se encontraron ciudades
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
 
@@ -187,7 +279,7 @@ function ForecastContent() {
                 </div>
 
                 <div className={styles.clickHint}>
-                  Click para ver detalles →
+                  Ver detalle por hora
                 </div>
               </div>
             ))}

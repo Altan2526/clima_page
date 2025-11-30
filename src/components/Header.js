@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./Header.module.css";
@@ -9,6 +9,11 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [recentCities, setRecentCities] = useState([]);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const debounceTimer = useRef(null);
+  const searchRef = useRef(null);
   const router = useRouter();
 
   const loadRecentCities = () => {
@@ -34,6 +39,10 @@ export default function Header() {
       if (!e.target.closest(`.${styles.dashboardWrapper}`)) {
         setIsDashboardOpen(false);
       }
+      // Cerrar sugerencias al hacer clic fuera del buscador
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
     };
     
     document.addEventListener("click", handleClickOutside);
@@ -44,9 +53,55 @@ export default function Header() {
     };
   }, []);
 
+  // Buscar sugerencias con debounce
+  const searchSuggestions = async (query) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setIsLoadingSuggestions(true);
+    try {
+      const response = await fetch(`/api/cities/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      if (response.ok && data.cities) {
+        setSuggestions(data.cities.slice(0, 6));
+        setShowSuggestions(true);
+      }
+    } catch (err) {
+      console.error("Error buscando ciudades:", err);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // Limpiar timer anterior
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    
+    // Establecer nuevo timer con 400ms de delay
+    debounceTimer.current = setTimeout(() => {
+      searchSuggestions(value);
+    }, 400);
+  };
+
+  const handleSuggestionClick = (city) => {
+    setSearchQuery(city.name);
+    setShowSuggestions(false);
+    setSuggestions([]);
+    router.push(`/multi-city?city=${encodeURIComponent(city.name + "," + city.country)}`);
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      setShowSuggestions(false);
       router.push(`/multi-city?city=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
     }
@@ -78,13 +133,6 @@ export default function Header() {
       description: "Consulta el clima de los próximos días",
       link: "/multi-city",
       color: "green"
-    },
-    {
-      icon: "🔍",
-      title: "Búsqueda Rápida",
-      description: "Usa el buscador del header",
-      link: "/#explore",
-      color: "purple"
     }
   ];
 
@@ -97,11 +145,12 @@ export default function Header() {
         </Link>
 
         {/* Barra de búsqueda */}
-        <form className={styles.searchForm} onSubmit={handleSearch}>
+        <form className={styles.searchForm} onSubmit={handleSearch} ref={searchRef}>
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleInputChange}
+            onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
             placeholder="El Tiempo en..."
             className={styles.searchInput}
           />
@@ -111,6 +160,33 @@ export default function Header() {
               <path d="m21 21-4.35-4.35"/>
             </svg>
           </button>
+          
+          {/* Dropdown de sugerencias */}
+          {showSuggestions && (
+            <div className={styles.suggestionsDropdown}>
+              {isLoadingSuggestions ? (
+                <div className={styles.suggestionLoading}>
+                  <span className={styles.miniLoader}></span>
+                  Buscando...
+                </div>
+              ) : suggestions.length > 0 ? (
+                suggestions.map((city, index) => (
+                  <div 
+                    key={`${city.name}-${city.country}-${index}`}
+                    className={styles.suggestionItem}
+                    onClick={() => handleSuggestionClick(city)}
+                  >
+                    <span className={styles.suggestionCity}>{city.name}</span>
+                    <span className={styles.suggestionCountry}>{city.countryName}</span>
+                  </div>
+                ))
+              ) : searchQuery.length >= 2 ? (
+                <div className={styles.noSuggestions}>
+                  No se encontraron ciudades
+                </div>
+              ) : null}
+            </div>
+          )}
         </form>
 
         {/* Ciudades recientes */}

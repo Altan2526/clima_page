@@ -100,3 +100,127 @@
     font-size: 1rem;
   }
 }
+
+/* Pronóstico de 5 días */
+.forecastSection {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 1rem;
+}
+
+.forecastTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #00f5d4;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
+}
+
+.forecastGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.forecastCard {
+  background: linear-gradient(135deg, rgba(13, 27, 42, 0.9), rgba(10, 10, 15, 0.95));
+  border: 1px solid rgba(0, 245, 212, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.forecastCard:hover {
+  border-color: rgba(0, 245, 212, 0.6);
+  box-shadow: 
+    0 0 25px rgba(0, 245, 212, 0.3),
+    0 8px 30px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, rgba(13, 27, 42, 1), rgba(10, 10, 15, 1));
+}
+
+.forecastDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dayName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.dayDate {
+  font-size: 0.8rem;
+  color: #8892b0;
+}
+
+.forecastIcon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(0, 245, 212, 0.4));
+}
+
+.forecastTemps {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.tempMax {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #00f5d4;
+}
+
+.tempMin {
+  font-size: 1rem;
+  color: #8892b0;
+}
+
+.forecastDesc {
+  font-size: 0.75rem;
+  color: #8892b0;
+  text-align: center;
+  text-transform: capitalize;
+  line-height: 1.3;
+  min-height: 2rem;
+}
+
+/* Responsive para el pronóstico */
+@media (max-width: 900px) {
+  .forecastGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .forecastGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .forecastCard {
+    padding: 1rem 0.75rem;
+  }
+  
+  .forecastIcon {
+    font-size: 2rem;
+  }
+  
+  .forecastTitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .forecastGrid {
+    grid-template-columns: 1fr;
+  }
+}

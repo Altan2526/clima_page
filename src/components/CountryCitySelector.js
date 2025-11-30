@@ -62,8 +62,22 @@ export default function CountryCitySelector({ onSearch }) {
   };
 
   const handleCityChange = (e) => {
-    setSelectedCity(e.target.value);
+    const city = e.target.value;
+    setSelectedCity(city);
     setSearchTerm("");
+    
+    // Buscar automáticamente al seleccionar una ciudad
+    if (city && selectedCountry) {
+      setIsSearching(true);
+      const searchQuery = `${city},${selectedCountry}`;
+      
+      if (onSearch) {
+        onSearch(searchQuery);
+        setIsSearching(false);
+      } else {
+        router.push(`/explorar?city=${encodeURIComponent(searchQuery)}`);
+      }
+    }
   };
 
   const handleSearch = () => {
