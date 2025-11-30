@@ -1,0 +1,147 @@
+.footer {
+  background: rgba(10, 10, 15, 0.98);
+  border-top: 1px solid rgba(0, 245, 212, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: auto;
+  position: relative;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00f5d4, transparent);
+  box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #00f5d4;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 600;
+}
+
+.description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  color: #8892b0;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.links a {
+  color: #8892b0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  position: relative;
+  width: fit-content;
+}
+
+.links a:hover {
+  color: #00f5d4;
+  text-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+}
+
+.links a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #00f5d4;
+  transition: width 0.3s ease;
+}
+
+.links a:hover::after {
+  width: 100%;
+}
+
+.info {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #8892b0;
+}
+
+.bottom {
+  border-top: 1px solid rgba(0, 245, 212, 0.1);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #8892b0;
+}
+
+.bottom a {
+  color: #00f5d4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.bottom a:hover {
+  text-shadow: 0 0 15px rgba(0, 245, 212, 0.8);
+}
+
+.developer {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.developer a {
+  color: #00f5d4;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.developer a:hover {
+  text-shadow: 0 0 15px rgba(0, 245, 212, 0.8);
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .links {
+    align-items: center;
+  }
+
+  .links a::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
