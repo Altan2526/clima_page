@@ -2,6 +2,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4rem;
   padding: 2rem;
   max-width: 1200px;
@@ -16,6 +17,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 3rem 0;
+  width: 100%;
 }
 
 .heroContent {
@@ -106,6 +108,7 @@
 /* Features Section */
 .features {
   text-align: center;
+  width: 100%;
 }
 
 .sectionTitle {
@@ -224,6 +227,7 @@
 /* Info Section */
 .info {
   text-align: center;
+  width: 100%;
 }
 
 .infoCards {
@@ -270,6 +274,7 @@
 .howItWorks {
   text-align: center;
   padding-bottom: 2rem;
+  width: 100%;
 }
 
 .steps {
