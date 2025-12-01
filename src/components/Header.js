@@ -36,7 +36,11 @@ export default function Header() {
     
     // Cerrar dashboard al hacer clic fuera
     const handleClickOutside = (e) => {
-      if (!e.target.closest(`.${styles.dashboardWrapper}`)) {
+      // No cerrar si se hace clic en el dashboard wrapper, menú móvil, botón del menú o panel del dashboard
+      if (!e.target.closest(`.${styles.dashboardWrapper}`) && 
+          !e.target.closest(`.${styles.mobileMenu}`) &&
+          !e.target.closest(`.${styles.menuButton}`) &&
+          !e.target.closest(`.${styles.dashboardPanel}`)) {
         setIsDashboardOpen(false);
       }
       // Cerrar sugerencias al hacer clic fuera del buscador

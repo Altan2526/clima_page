@@ -14,6 +14,7 @@
   padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2rem;
 }
 
@@ -552,19 +553,28 @@
     display: block;
   }
 
+  .citiesBar {
+    display: none;
+  }
+
   .dashboardWrapper {
+    position: static;
+  }
+
+  .dashboardButton {
     display: none;
   }
 
   .dashboardPanel {
     position: fixed;
-    top: 60px;
+    top: 56px;
     left: 0;
     right: 0;
     width: 100%;
-    max-height: calc(100vh - 60px);
+    max-height: calc(100vh - 56px);
     overflow-y: auto;
     border-radius: 0 0 16px 16px;
+    z-index: 1001;
   }
 
   .menuGrid {
@@ -573,12 +583,5 @@
 
   .logoText {
     font-size: 1.2rem;
-  }
-}
-
-/* Mobile dashboard shown via mobile menu */
-@media (max-width: 768px) {
-  .mobileMenu .dashboardPanel {
-    display: block;
   }
 }
