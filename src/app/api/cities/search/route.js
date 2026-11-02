@@ -1,5 +1,4 @@
-export const runtime = 'edge';
-
+import { NextResponse } from "next/server";
 
 // Base de datos de ciudades principales por país
 const citiesDatabase = {
@@ -47,7 +46,7 @@ export async function GET(request) {
   const query = searchParams.get("q")?.toLowerCase().trim();
 
   if (!query || query.length < 2) {
-    return Response.json({ cities: [] });
+    return NextResponse.json({ cities: [] });
   }
 
   // Función para normalizar texto (quitar tildes/acentos)
@@ -88,5 +87,5 @@ export async function GET(request) {
     return a.name.localeCompare(b.name);
   });
 
-  return Response.json({ cities: results });
+  return NextResponse.json({ cities: results });
 }
