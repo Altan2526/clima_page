@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+export const runtime = 'edge';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const city = searchParams.get("city");
 
   if (!city) {
-    return NextResponse.json(
+    return Response.json(
       { error: "Se requiere el nombre de la ciudad" },
       { status: 400 }
     );
@@ -14,7 +14,7 @@ export async function GET(request) {
   const apiKey = process.env.OPENWEATHER_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json(
+    return Response.json(
       { error: "API key no configurada" },
       { status: 500 }
     );
@@ -30,7 +30,7 @@ export async function GET(request) {
 
     if (!response.ok) {
       if (response.status === 404) {
-        return NextResponse.json(
+        return Response.json(
           { error: "Ciudad no encontrada" },
           { status: 404 }
         );
@@ -119,10 +119,10 @@ export async function GET(request) {
       forecast: forecast
     };
 
-    return NextResponse.json(weatherData);
+    return Response.json(weatherData);
   } catch (error) {
     console.error("Error fetching forecast:", error);
-    return NextResponse.json(
+    return Response.json(
       { error: "Error al obtener el pronóstico" },
       { status: 500 }
     );
